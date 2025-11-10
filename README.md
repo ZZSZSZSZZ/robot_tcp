@@ -9,13 +9,7 @@ $ cmake ..
 $ make
 ```
 
-# 终端1：启动服务端
-```bash
-$ cd workspace/robot_tcp/build
-$ ./test_robot_device
-```
-
-# 终端2：启动客户端
+# 启动
 ```bash
 $ cd workspace/robot_ws
 $ source install/setup.bash
