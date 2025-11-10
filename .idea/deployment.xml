@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="远程主机 (77665db4-0707-4cac-9e1d-db9bff38292e)" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
+    <option name="confirmBeforeUploading" value="false" />
+    <serverData>
+      <paths name="远程主机 (77665db4-0707-4cac-9e1d-db9bff38292e)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/zzszszszz/zzszszszz/robot_tcp" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
