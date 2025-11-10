@@ -15,8 +15,3 @@ $ cd workspace/robot_ws
 $ source install/setup.bash
 $ ros2 launch robot_ros2_control robot.launch.py
 ```
-
-# 删除客户端节点
-```bash
-$ sudo pkill -f -9 "server_node|client_node"
-```
