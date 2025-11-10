@@ -2,8 +2,10 @@
 #编译
 sudo apt-get install libjsoncpp-dev
 cd ~/workspace/robot_tcp
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build
+mkdir build
+cd build
+cmake ..
+make
 
 # 终端1：启动服务端
 cd ~/workspace/robot_tcp
