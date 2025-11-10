@@ -12,7 +12,7 @@
 int main() {
     try {
         std::cout << "test robot device" << std::endl;
-        auto robot = robot::Robot(139);
+        auto robot = robot::Robot(8080);
         robot.init_robot();
 
         while (true){

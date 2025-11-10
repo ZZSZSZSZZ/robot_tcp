@@ -1,21 +1,28 @@
 
-#编译
-sudo apt-get install libjsoncpp-dev
-cd ~/workspace/robot_tcp
-mkdir build
-cd build
-cmake ..
-make
+# 编译
+```bash
+$ sudo apt-get install libjsoncpp-dev
+$ cd workspace/robot_tcp
+$ git clone https://github.com/ZZSZSZSZZ/robot_tcp.git
+$ mkdir build && cd build
+$ cmake ..
+$ make
+```
 
 # 终端1：启动服务端
-cd ~/workspace/robot_tcp
-./build/test_robot
+```bash
+$ cd workspace/robot_tcp/build
+$ ./test_robot_device
+```
 
 # 终端2：启动客户端
-cd ~/code/chapt
-source install/setup.bash
-ros2 run client client_node
-
+```bash
+$ cd workspace/robot_ws
+$ source install/setup.bash
+$ ros2 launch robot_ros2_control robot.launch.py
+```
 
 # 删除客户端节点
-sudo pkill -f -9 "server_node|client_node"
+```bash
+$ sudo pkill -f -9 "server_node|client_node"
+```
