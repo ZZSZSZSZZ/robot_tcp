@@ -47,6 +47,7 @@ else ()
             $<INSTALL_INTERFACE:include>)
     install(TARGETS robot_tcp EXPORT robot_tcp_export)
     install(DIRECTORY include/robot TYPE INCLUDE)
+    install(DIRECTORY include/tcp TYPE INCLUDE)
 endif ()
 
 # CMake package
