@@ -16,21 +16,21 @@ robot::RobotDevice::RobotDevice(const int &post) {
 bool robot::RobotDevice::send_tcp_msg(RobotPacket packet) {
     Json::FastWriter writer;
     Json::Value value;
-    value["cmd"] = packet.cmd_id;
+    value["CMD"] = packet.cmd_id;
     for (double data: packet.data) {
-        value["data"].append(data);
+        value["DATA"].append(data);
     }
     std::string str = writer.write(value);
 
     const char *buff = str.c_str();
 
-    return socket->tcp_write(buff, strlen(buff));
+    return socket->tcp_write(buff, (int) strlen(buff));
 }
 
 
 bool robot::RobotDevice::read_tcp_msg(RobotPacket *packet) {
     char buff[1024];
-    socket->tcp_read(buff, sizeof buff);
+    socket->tcp_read(buff, (int) strlen(buff));
     std::string json = buff;
 
     Json::Reader reader;
@@ -39,12 +39,11 @@ bool robot::RobotDevice::read_tcp_msg(RobotPacket *packet) {
     if (!reader.parse(json, resp))
         return false;
 
-    packet->cmd_id = resp["cmd"].asInt();
+    packet->cmd_id = resp["CMD"].asInt();
 
-    Json::Value arrayObj = resp["data"];
+    Json::Value arrayObj = resp["DATA"];
     int mSize = arrayObj.size();
-    for (int i = 0; i < mSize; i++)
-    {
+    for (int i = 0; i < mSize; i++) {
         packet->data.push_back(arrayObj[i].asDouble());
     }
     return true;

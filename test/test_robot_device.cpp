@@ -16,7 +16,7 @@ int main() {
         robot::RobotPacket packet;
         packet.cmd_id = 1;
         packet.data = {0,0,1,11};
-        robot_device.send_tcp_msg(packet);
+        robot_device.control_robot(packet);
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return -1;

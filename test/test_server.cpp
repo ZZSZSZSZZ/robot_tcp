@@ -13,10 +13,10 @@ int main() {
     try {
         std::cout << "test server" << std::endl;
         auto socker = robot::tcp::TCPSocket(8080);
-        char recvbuf[1024];
-        while (true){
-            socker.tcp_read(recvbuf, sizeof recvbuf);
-            printf("%s", recvbuf);
+        char read_buf[1024];
+        while (true) {
+            socker.tcp_read(read_buf, (int) strlen(read_buf));
+            printf("%s", read_buf);
         }
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
