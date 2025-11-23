@@ -8,6 +8,8 @@
 #include <robot/robot_device.hpp>
 #include <jsoncpp/json/json.h>
 #include <cstring>
+#include <string>
+#include <iostream>
 
 robot::RobotDevice::RobotDevice(const int &post) {
     socket = std::make_unique<tcp::TCPSocket>(post);
@@ -43,6 +45,8 @@ bool robot::RobotDevice::read_tcp_msg(RobotPacket *packet) {
 
     Json::Value arrayObj = resp["DATA"];
     int mSize = arrayObj.size();
+    std::cout << "mSize: " << mSize << std::endl;
+
     for (int i = 0; i < mSize; i++) {
         packet->data.push_back(arrayObj[i].asDouble());
     }
@@ -53,9 +57,12 @@ bool robot::RobotDevice::control_robot(RobotPacket packet) {
     send_tcp_msg(packet);
     while (true) {
         RobotPacket packet_;
-        read_tcp_msg(&packet_);
+        if (!read_tcp_msg(&packet_)) {
+            std::cout << "!!!!!!!!!!!!!!!" << std::endl;
+        }
 
-        printf("cmd : %u\n", packet_.cmd_id);
+        // printf("cmd : %u\n", packet_.cmd_id);
+        std::cout << "cmd: " << unsigned(packet_.cmd_id) << std::endl;
 //        for (size_t i = 0; i < packet_.data.size(); ++i) {
 //            printf("%d ", packet_.data[i]); // 打印每个元素
 //        }

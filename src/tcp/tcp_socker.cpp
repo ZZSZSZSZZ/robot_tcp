@@ -18,8 +18,11 @@
 #include <unistd.h>
 #include <thread>
 #include <vector>
+#include <iostream>
 
 #include <tcp/tcp_socker.hpp>
+
+using namespace std;
 
 namespace robot::tcp {
 
@@ -38,21 +41,24 @@ namespace robot::tcp {
         // 创建TCP套接字
         server_fd = socket(AF_INET, SOCK_STREAM, 0);
         if (server_fd < 0) {
-            printf("创建套接字失败");
+            // printf("创建套接字失败");
+            cout << "创建套接字失败" << endl;
             return false;
         }
 
         // 设置 TCP_NODELAY 选项
         int flag = 1;
         if (setsockopt(server_fd, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag)) < 0) {
-            printf("无法设置 TCP_NODELAY 选项");
+            // printf("无法设置 TCP_NODELAY 选项");
+            cout << "无法设置 TCP_NODELAY 选项" << endl;
             close(server_fd);
             return false;
         }
 
         // 设置 SO_REUSEADDR 选项
         if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag)) < 0) {
-            printf("无法设置 SO_REUSEADDR 选项");
+            // printf("无法设置 SO_REUSEADDR 选项");
+            cout << "无法设置 SO_REUSEADDR 选项" << endl;
             close(server_fd);
             return false;
         }
@@ -65,14 +71,16 @@ namespace robot::tcp {
 
         // 绑定套接字到指定端口
         if (bind(server_fd, (struct sockaddr *) &server, sizeof(server)) < 0) {
-            printf("绑定端口失败");
+            // printf("绑定端口失败");
+            cout << "绑定端口失败" << endl;
             close(server_fd);
             return false;
         }
 
         // 开始监听连接请求
         if (listen(server_fd, 10) < 0) {
-            printf("监听失败");
+            // printf("监听失败");
+            cout << "监听失败" << endl;
             close(server_fd);
             return false;
         }
@@ -85,7 +93,8 @@ namespace robot::tcp {
 //            return false;
 //        }
 
-        printf("TCP服务端已启动，端口: %d \n", post);
+        // printf("TCP服务端已启动，端口: %d \n", post);
+        cout << "TCP服务端已启动 - 端口: " << post << endl;
 
         return true;
     }
@@ -95,14 +104,16 @@ namespace robot::tcp {
         // 接受客户端连接
         client_fd = accept(server_fd, (struct sockaddr *) &client, &clientlen);
         if (client_fd < 0) {
-            printf("接受连接失败");
+            // printf("接受连接失败");
+            cout << "接受连接失败" << endl;
             close(server_fd);
         }
 
         // 获取客户端IP和端口
         char client_ip[INET_ADDRSTRLEN];
         inet_ntop(AF_INET, &client.sin_addr, client_ip, INET_ADDRSTRLEN);
-        printf("客户端已连接 - IP: %s, 端口: %d \n", client_ip, ntohs(client.sin_port));
+        // printf("客户端已连接 - IP: %s, 端口: %d \n", client_ip, ntohs(client.sin_port));
+        cout << "客户端已连接 - IP: " << client_ip << " - 端口: " << ntohs(client.sin_port) << endl;
     }
 
 
@@ -114,7 +125,8 @@ namespace robot::tcp {
         while (remain) {
             if ((wc = send(client_fd, ptr, remain, 0)) <= 0) {
                 if (wc < 0 && errno == EINTR) continue;
-                printf("send error: %s" , strerror(errno));
+                // printf("send error: %s" , strerror(errno));
+                cout << "发送错误: " << strerror(errno) << endl;
                 return false;
             }
             remain -= wc;
@@ -130,13 +142,16 @@ namespace robot::tcp {
 
         while (remain) {
             if ((rc = recv(client_fd, ptr, remain, 0)) < 0) {
+                cout << rc << endl;
                 if (errno == EINTR) {
                     rc = 0;
                 } else {
-                    printf("recv error: %s" , strerror(errno));
+                    // printf("recv error: %s" , strerror(errno));
+                    cout << "接收错误: " << strerror(errno) << endl;
                     return false;
                 }
             } else if (rc == 0) {
+                cout << rc << endl;
                 break;
             }
             remain -= rc;

@@ -6,6 +6,7 @@
  */
 
 #include <utility>
+#include <iostream>
 
 #include "robot/robot.hpp"
 
@@ -25,16 +26,36 @@ bool robot::Robot::disable_robot() {
     return robot_device->control_robot(robot::RobotControl::create_deactivate_command());
 }
 
+// bool robot::Robot::read(std::vector<double> *data) {
+//     RobotPacket packet;
+//     if (!robot_device->read_tcp_msg(&packet)){
+//         return false;
+//     }
+//     if (packet.cmd_id == 4){
+//         printf("read \n");
+//         *data = packet.data;
+//         return true;
+//     }
+//     return false;
+// }
+
 bool robot::Robot::read(std::vector<double> *data) {
     RobotPacket packet;
+    robot_device->send_tcp_msg(robot::RobotControl::create_read_command());
+
     if (!robot_device->read_tcp_msg(&packet)){
         return false;
     }
+
     if (packet.cmd_id == 4){
-        printf("read \n");
         *data = packet.data;
+        std::cout << "data: " << std::endl;
+        for (double i : packet.data) {
+            std::cout << i << std::endl;
+        }
         return true;
     }
+
     return false;
 }
 

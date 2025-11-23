@@ -3,6 +3,34 @@
   <component name="PublishConfigData" autoUpload="Always" serverName="远程主机 (77665db4-0707-4cac-9e1d-db9bff38292e)" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
+      <paths name="nx">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/robot/robot_tcp" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="unitree">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="unitree_robot">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="unitree_ros1">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="远程主机 (77665db4-0707-4cac-9e1d-db9bff38292e)">
         <serverdata>
           <mappings>
