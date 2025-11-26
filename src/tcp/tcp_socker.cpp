@@ -142,7 +142,6 @@ namespace robot::tcp {
 
         while (remain) {
             if ((rc = recv(client_fd, ptr, remain, 0)) < 0) {
-                cout << rc << endl;
                 if (errno == EINTR) {
                     rc = 0;
                 } else {
@@ -150,8 +149,8 @@ namespace robot::tcp {
                     cout << "接收错误: " << strerror(errno) << endl;
                     return false;
                 }
-            } else if (rc == 0) {
-                cout << rc << endl;
+            // } else if (rc == 0) {
+            } else if (strchr(ptr, '\0') != nullptr) {
                 break;
             }
             remain -= rc;
@@ -159,4 +158,69 @@ namespace robot::tcp {
         }
         return true;
     }
+
+    // bool TCPSocket::tcp_read(char *frame, const int n) {
+    //     int timeout_ms = -1;
+    //     // 1. 参数合法性校验
+    //     if (frame == nullptr || n <= 0) {
+    //         cout << "[tcp_read] 非法参数：frame为空指针 或 n=" << n << "（必须>0）" << endl;
+    //         return false;
+    //     }
+    //     if (client_fd < 0) {
+    //         cout << "[tcp_read] 客户端套接字未初始化（client_fd=" << client_fd << "）" << endl;
+    //         return false;
+    //     }
+    //
+    //     int remain = n;
+    //     char *ptr = frame;
+    //     fd_set read_fds;
+    //     struct timeval tv;
+    //
+    //     while (remain > 0) {
+    //         // 2. 超时机制：若设置超时，通过 select 监听可读事件
+    //         if (timeout_ms >= 0) {
+    //             FD_ZERO(&read_fds);
+    //             FD_SET(client_fd, &read_fds);
+    //             tv.tv_sec = timeout_ms / 1000;       // 秒
+    //             tv.tv_usec = (timeout_ms % 1000) * 1000; // 微秒
+    //
+    //             int select_rc = select(client_fd + 1, &read_fds, nullptr, nullptr, &tv);
+    //             if (select_rc < 0) {
+    //                 if (errno == EINTR) {
+    //                     continue; // 被信号中断，重试 select
+    //                 }
+    //                 cout << "[tcp_read] select 错误（client_fd=" << client_fd << "）：" << strerror(errno) << endl;
+    //                 return false;
+    //             } else if (select_rc == 0) {
+    //                 cout << "[tcp_read] 读取超时（" << timeout_ms << "ms），剩余未读：" << remain << "字节" << endl;
+    //                 return false;
+    //             }
+    //             // 若有可读事件，继续调用 recv
+    //         }
+    //
+    //         // 3. 读取数据
+    //         int rc = recv(client_fd, ptr, remain, 0);
+    //         if (rc < 0) {
+    //             if (errno == EINTR) {
+    //                 continue; // 被信号中断，重试 recv（不修改 remain）
+    //             }
+    //             cout << "[tcp_read] recv 错误（client_fd=" << client_fd << "）：" << strerror(errno) << endl;
+    //             return false;
+    //         } else if (rc == 0) {
+    //             // 4. 对方关闭连接，未读取完指定长度
+    //             cout << "[tcp_read] 对方关闭连接（client_fd=" << client_fd << "），已读：" << (n - remain) << "字节，剩余：" << remain << "字节" << endl;
+    //             return false;
+    //         }
+    //
+    //         // 5. 更新读取进度
+    //         remain -= rc;
+    //         ptr += rc;
+    //         // 调试日志（可选，生产环境可注释）
+    //         // cout << "[tcp_read] 读取成功（client_fd=" << client_fd << "）：" << rc << "字节，剩余：" << remain << "字节" << endl;
+    //     }
+    //
+    //     // 6. 读取完所有 n 字节
+    //     // cout << "[tcp_read] 读取完成（client_fd=" << client_fd << "）：共" << n << "字节" << endl;
+    //     return true;
+    // }
 }

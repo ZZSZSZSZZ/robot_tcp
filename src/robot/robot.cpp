@@ -43,16 +43,12 @@ bool robot::Robot::read(std::vector<double> *data) {
     RobotPacket packet;
     robot_device->send_tcp_msg(robot::RobotControl::create_read_command());
 
-    if (!robot_device->read_tcp_msg(&packet)){
-        return false;
+    while (!robot_device->read_tcp_msg(&packet)) {
+        robot_device->send_tcp_msg(robot::RobotControl::create_read_command());
     }
 
     if (packet.cmd_id == 4){
         *data = packet.data;
-        std::cout << "data: " << std::endl;
-        for (double i : packet.data) {
-            std::cout << i << std::endl;
-        }
         return true;
     }
 

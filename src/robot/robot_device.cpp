@@ -26,26 +26,26 @@ bool robot::RobotDevice::send_tcp_msg(RobotPacket packet) {
 
     const char *buff = str.c_str();
 
-    return socket->tcp_write(buff, (int) strlen(buff));
+    return socket->tcp_write(buff, static_cast<int>(strlen(buff)));
 }
 
-
 bool robot::RobotDevice::read_tcp_msg(RobotPacket *packet) {
-    char buff[1024];
-    socket->tcp_read(buff, (int) strlen(buff));
+    char buff[1024] = {0};
+    socket->tcp_read(buff, sizeof(buff) / sizeof(char));
     std::string json = buff;
+
+    std::cout << "json: " << json << std::endl;
 
     Json::Reader reader;
     Json::Value resp;
 
-    if (!reader.parse(json, resp))
+    if (!reader.parse(json, resp) || !resp.isObject())
         return false;
 
     packet->cmd_id = resp["CMD"].asInt();
 
     Json::Value arrayObj = resp["DATA"];
     int mSize = arrayObj.size();
-    std::cout << "mSize: " << mSize << std::endl;
 
     for (int i = 0; i < mSize; i++) {
         packet->data.push_back(arrayObj[i].asDouble());
@@ -57,18 +57,15 @@ bool robot::RobotDevice::control_robot(RobotPacket packet) {
     send_tcp_msg(packet);
     while (true) {
         RobotPacket packet_;
-        if (!read_tcp_msg(&packet_)) {
-            std::cout << "!!!!!!!!!!!!!!!" << std::endl;
+        while (!read_tcp_msg(&packet_)) {
+            send_tcp_msg(packet);
         }
 
         // printf("cmd : %u\n", packet_.cmd_id);
         std::cout << "cmd: " << unsigned(packet_.cmd_id) << std::endl;
-//        for (size_t i = 0; i < packet_.data.size(); ++i) {
-//            printf("%d ", packet_.data[i]); // 打印每个元素
-//        }
-//        printf("\n");
 
         if (packet_.cmd_id == packet.cmd_id) {
+            std::cout << "ok" << std::endl;
             break;
         }
     }
