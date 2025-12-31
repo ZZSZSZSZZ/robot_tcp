@@ -7,6 +7,7 @@
 
 #include <string>
 #include <memory>
+#include <unordered_map>
 
 #include "robot_control.hpp"
 
@@ -21,10 +22,13 @@ namespace robot {
         bool enable_robot();
         bool disable_robot();
 
-        bool read(std::vector<double> *data);
-        bool write(std::vector<double> data);
+        bool read_robot();
+
+        bool read(vector<vector<double>> *data);
+        bool write(const vector<double> &data) const;
 
     private:
-        std::unique_ptr<robot::RobotDevice> robot_device;
+        static vector<vector<double>> joints_order(const vector<vector<double>>& data, const vector<int>& order);
+        unique_ptr<robot::RobotDevice> robot_device;
     };
 }

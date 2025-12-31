@@ -25,6 +25,6 @@ namespace robot {
         static RobotPacket create_activate_command();
         static RobotPacket create_deactivate_command();
         static RobotPacket create_read_command();
-        static RobotPacket create_write_command(std::vector<double> data);
+        static RobotPacket create_write_command(vector<vector<double>> data);
     };
 }

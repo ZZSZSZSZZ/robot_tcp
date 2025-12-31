@@ -18,11 +18,20 @@ robot::RobotDevice::RobotDevice(const int &post) {
 bool robot::RobotDevice::send_tcp_msg(RobotPacket packet) {
     Json::FastWriter writer;
     Json::Value value;
+
     value["CMD"] = packet.cmd_id;
-    for (double data: packet.data) {
-        value["DATA"].append(data);
+
+    for (const vector<double>& dataArray: packet.data) {
+        Json::Value innerArray;
+        for (double data : dataArray) {
+            innerArray.append(data);
+        }
+        value["DATA"].append(innerArray);
     }
+
     std::string str = writer.write(value);
+
+    std::cout << "tcp_send json: " << str << std::endl;
 
     const char *buff = str.c_str();
 
@@ -31,10 +40,11 @@ bool robot::RobotDevice::send_tcp_msg(RobotPacket packet) {
 
 bool robot::RobotDevice::read_tcp_msg(RobotPacket *packet) {
     char buff[1024] = {0};
+
     socket->tcp_read(buff, sizeof(buff) / sizeof(char));
     std::string json = buff;
 
-    std::cout << "json: " << json << std::endl;
+    std::cout << "tcp_read json: " << json << std::endl;
 
     Json::Reader reader;
     Json::Value resp;
@@ -45,25 +55,30 @@ bool robot::RobotDevice::read_tcp_msg(RobotPacket *packet) {
     packet->cmd_id = resp["CMD"].asInt();
 
     Json::Value arrayObj = resp["DATA"];
-    int mSize = arrayObj.size();
 
-    for (int i = 0; i < mSize; i++) {
-        packet->data.push_back(arrayObj[i].asDouble());
+    for (const auto& innerArray : arrayObj) {
+        std::vector<double> innerVec;
+        for (const auto& val : innerArray) {
+            innerVec.push_back(val.asDouble());
+        }
+        packet->data.push_back(innerVec);
     }
+
     return true;
 }
 
 bool robot::RobotDevice::control_robot(RobotPacket packet) {
-    send_tcp_msg(packet);
+    send_tcp_msg(packet); // 发送命令
     while (true) {
-        RobotPacket packet_;
-        while (!read_tcp_msg(&packet_)) {
+        RobotPacket packet_; // buff
+
+        // 当读取失败时重新发送命令，直到读取成功
+        while (!read_tcp_msg(&packet_))
             send_tcp_msg(packet);
-        }
 
-        // printf("cmd : %u\n", packet_.cmd_id);
-        std::cout << "cmd: " << unsigned(packet_.cmd_id) << std::endl;
+        std::cout << "tcp_control cmd: " << unsigned(packet_.cmd_id) << std::endl;
 
+        // 当读取的命令和发送命令相符时，跳出循环返回成功
         if (packet_.cmd_id == packet.cmd_id) {
             std::cout << "ok" << std::endl;
             break;

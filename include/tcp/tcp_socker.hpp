@@ -10,11 +10,13 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+using namespace std;
+
 namespace robot::tcp {
-    class TCPSocketException : public std::runtime_error {
+    class TCPSocketException : public runtime_error {
     public:
-        explicit TCPSocketException(const std::string &message)
-                : std::runtime_error("Socket error: " + message) {}
+        explicit TCPSocketException(const string &message)
+                : runtime_error("Socket error: " + message) {}
     };
 
     class TCPSocket {
