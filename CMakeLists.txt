@@ -87,14 +87,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/robot-tcp.pc
 
 target_link_libraries(robot_tcp libjsoncpp.so.1.9.5)
 
-add_executable(test_server test/test_server.cpp)
-target_link_libraries(test_server robot_tcp)
-
-add_executable(test_robot_device test/test_robot_device.cpp)
-target_link_libraries(test_robot_device robot_tcp)
-
-add_executable(test_robot test/test_robot.cpp)
-target_link_libraries(test_robot robot_tcp)
+add_executable(test_tcp test/test_tcp.cpp)
+target_link_libraries(test_tcp robot_tcp)
 
 # Add tests
 if (BUILD_TESTING)
