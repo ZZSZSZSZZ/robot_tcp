@@ -36,7 +36,7 @@ robot::RobotPacket robot::RobotControl::create_read_command() {
     return packet;
 }
 
-robot::RobotPacket robot::RobotControl::create_write_command(vector<vector<double>> data) {
+robot::RobotPacket robot::RobotControl::create_write_command(vector<vector<float>> data) {
     RobotPacket packet;
     packet.cmd_id = 5;
     packet.data = std::move(data);

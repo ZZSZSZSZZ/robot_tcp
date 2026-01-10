@@ -14,7 +14,7 @@
 namespace robot {
     struct RobotPacket {
         uint8_t cmd_id;
-        vector<vector<double>> data;
+        vector<vector<float>> data;
     };
 
     class RobotDevice {
@@ -29,6 +29,6 @@ namespace robot {
         bool control_robot(RobotPacket packet);
 
     private:
-        unique_ptr<tcp::TCPSocket> socket;
+        std::unique_ptr<tcp::TCPSocket> socket;
     };
 }

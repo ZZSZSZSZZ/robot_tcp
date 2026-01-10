@@ -24,11 +24,11 @@ namespace robot {
 
         bool read_robot();
 
-        bool read(vector<vector<double>> *data);
-        bool write(const vector<double> &data) const;
+        bool read(vector<vector<float>> *data);
+        bool write(const vector<float> &data) const;
 
     private:
-        static vector<vector<double>> joints_order(const vector<vector<double>>& data, const vector<int>& order);
-        unique_ptr<robot::RobotDevice> robot_device;
+        static vector<vector<float>> joints_order(const vector<vector<float>>& data, const vector<int>& order);
+        std::unique_ptr<robot::RobotDevice> robot_device;
     };
 }

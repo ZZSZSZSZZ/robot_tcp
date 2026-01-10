@@ -38,16 +38,16 @@ bool robot::Robot::read_robot() {
 /// @param data 关节id原始数组
 /// @param order 排序数组
 /// @return 根据排序数组排序的关节id数组
-vector<vector<double> > robot::Robot::joints_order(const vector<vector<double> > &data, const vector<int> &order) {
+vector<vector<float> > robot::Robot::joints_order(const vector<vector<float> > &data, const vector<int> &order) {
     // 创建ID到行数据的映射
-    std::unordered_map<int, std::vector<double> > idToRow;
+    std::unordered_map<int, std::vector<float> > idToRow;
     for (const auto &row: data) {
         int id = static_cast<int>(row[0]);
         idToRow[id] = row;
     }
 
     // 创建结果数组
-    std::vector<std::vector<double> > result;
+    std::vector<std::vector<float> > result;
 
     // 按照指定顺序添加数据
     for (int id: order) {
@@ -63,7 +63,7 @@ vector<vector<double> > robot::Robot::joints_order(const vector<vector<double> >
 /// 读取数据
 /// @param data 返回读到的数组
 /// @return 是否成功读取
-bool robot::Robot::read(vector<vector<double> > *data) {
+bool robot::Robot::read(vector<vector<float> > *data) {
     while (true) {
         RobotPacket packet; // buff
 
@@ -87,14 +87,14 @@ bool robot::Robot::read(vector<vector<double> > *data) {
 /// 下发数据
 /// @param data 需要下发的数据
 /// @return 是否成功下发
-bool robot::Robot::write(const vector<double> &data) const {
-    vector<double> data_template = {0, 0, 1, 50, 1};
+bool robot::Robot::write(const vector<float> &data) const {
+    vector<float> data_template = {0, 0, 1, 50, 1};
     vector<int> joint_order = {8, 9, 10, 11, 12, 13, 14, 18, 7, 6, 5, 4, 3, 2, 1, 19, 1551, 1552, 1553};
-    vector<vector<double> > result;
+    vector<vector<float> > result;
 
     for (size_t i = 0; i < data.size(); ++i) {
         // 创建新行，复制模板
-        vector<double> row = data_template;
+        vector<float> row = data_template;
 
         // 根据关节顺序设置关节ID
         row[0] = joint_order[i];
@@ -107,7 +107,7 @@ bool robot::Robot::write(const vector<double> &data) const {
     }
 
     for (const auto &row: result) {
-        for (double element: row) {
+        for (float element: row) {
             std::cout << element << " " << std::endl;
         }
         std::cout << ";" << std::endl;

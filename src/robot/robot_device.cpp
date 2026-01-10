@@ -21,9 +21,9 @@ bool robot::RobotDevice::send_tcp_msg(RobotPacket packet) {
 
     value["CMD"] = packet.cmd_id;
 
-    for (const vector<double>& dataArray: packet.data) {
+    for (const vector<float>& dataArray: packet.data) {
         Json::Value innerArray;
-        for (double data : dataArray) {
+        for (float data : dataArray) {
             innerArray.append(data);
         }
         value["DATA"].append(innerArray);
@@ -57,9 +57,9 @@ bool robot::RobotDevice::read_tcp_msg(RobotPacket *packet) {
     Json::Value arrayObj = resp["DATA"];
 
     for (const auto& innerArray : arrayObj) {
-        std::vector<double> innerVec;
+        std::vector<float> innerVec;
         for (const auto& val : innerArray) {
-            innerVec.push_back(val.asDouble());
+            innerVec.push_back(val.asFloat());
         }
         packet->data.push_back(innerVec);
     }
