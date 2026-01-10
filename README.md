@@ -6,7 +6,7 @@ $ cd workspace/robot_tcp
 $ git clone https://github.com/ZZSZSZSZZ/robot_tcp.git
 $ mkdir build && cd build
 $ cmake ..
-$ make
+$ sudo make install
 ```
 
 # 启动
